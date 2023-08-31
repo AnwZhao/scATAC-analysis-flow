@@ -1,0 +1,8 @@
+Idents(pbmc) <- "all"  # group all cells together, rather than by replicate
+VlnPlot(
+  object = pbmc,
+  features = c('pct_reads_in_peaks', 'peak_region_fragments',
+               'TSS.enrichment', 'blacklist_ratio', 'nucleosome_signal'),
+  pt.size = 0.1,
+  ncol = 5
+)

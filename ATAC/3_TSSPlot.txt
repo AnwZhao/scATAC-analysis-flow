@@ -1,0 +1,14 @@
+pbmc <- NucleosomeSignal(pbmc)
+pbmc <- TSSEnrichment(pbmc, fast = FALSE)
+#pbmc$blacklist_fraction <- FractionCountsInRegion(
+#  object = pbmc,
+#  assay = 'peaks',
+#  regions = blacklist_mm10
+#)
+
+pbmc$pct_reads_in_peaks <- pbmc$peak_region_fragments / pbmc$passed_filters * 100
+pbmc$blacklist_ratio <- pbmc$blacklist_region_fragments / pbmc$peak_region_fragments
+pbmc$high.tss <- ifelse(pbmc$TSS.enrichment > 1.2, 'High', 'Low')
+TSSPlot(pbmc, group.by = 'high.tss') + NoLegend()
+
+pbmc$nucleosome_group <- ifelse(pbmc$nucleosome_signal > 4, 'NS > 4', 'NS < 4')

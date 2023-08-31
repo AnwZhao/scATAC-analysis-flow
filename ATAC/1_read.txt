@@ -1,0 +1,31 @@
+library(Signac)
+library(Seurat)
+library(GenomeInfoDb)
+library(ggplot2)
+library(patchwork)
+library(showtext)
+library(shadowtext)
+showtext_auto()
+
+counts <- Read10X_h5(filename = 'filtered_feature_bc_matrix.h5')
+metadata <- read.csv(
+  file =  'singlecell_utf8.csv',
+  header = TRUE,
+  row.names = 1
+)
+
+
+chrom_assay <- CreateChromatinAssay(
+  counts = counts,
+  sep = c(":", "-"),
+  genome = 'hg19',
+  fragments =  'fragments.tsv.gz',
+  min.cells = 10,
+  min.features = 200
+)
+
+pbmc <- CreateSeuratObject(
+  counts = chrom_assay,
+  assay = "peaks",
+  meta.data = metadata
+)

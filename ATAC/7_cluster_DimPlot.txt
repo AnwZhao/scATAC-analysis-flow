@@ -1,0 +1,27 @@
+pbmc <-  subset(
+  x = pbmc,
+  subset = peak_region_fragments > 500 &
+    peak_region_fragments < 20000 &
+    pct_reads_in_peaks > 10 &
+    blacklist_ratio < 0.05 &
+    nucleosome_signal < 4 &
+    TSS.enrichment > 1.2
+)
+
+pbmc
+
+
+######################
+pbmc <- FindTopFeatures(pbmc, min.cutoff = "q0")
+pbmc <- RunTFIDF(pbmc)
+pbmc <- RunSVD(pbmc)
+pbmc <- RunUMAP(pbmc, reduction = 'lsi', dims = 2:30, reduction.name = 'umap.atac')
+pbmc <- FindNeighbors(object = pbmc, reduction = 'lsi', k.param=40,dims = 2:30)
+pbmc <- FindClusters(object = pbmc, resolution=1,verbose = FALSE, algorithm = 3)
+
+
+######################################
+
+p <- DimPlot(pbmc, reduction = 'umap.atac', label = TRUE) + NoLegend() + ggtitle("ATAC UMAP")
+
+p
